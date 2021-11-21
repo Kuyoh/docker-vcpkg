@@ -1,0 +1,7 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/testproject",
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "/opt/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
+    "cmakeExplorer.buildDir": "${buildDirectory}"
+}
