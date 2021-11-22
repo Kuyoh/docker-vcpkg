@@ -14,10 +14,17 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#building">Building</a></li>
+        <li><a href="#updating-vcpkg">Updating vcpkg</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#use-as-base-docker-image">Use as base docker image</a></li>
+        <li><a href="#use-as-development-container">Use as development container</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -115,7 +122,7 @@ RUN cmake --build /workspace/build --config Release --target all -j 6 --
 ```
 
 
-### Use as Development Container in Visual Studio Code
+### Use as development container
 
 First, make sure to have the [Remote - Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension installed in you Visual Studio Code instance.
 
