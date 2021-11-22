@@ -7,6 +7,11 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+    paths:
+      - 'Dockerfile.*'
+      - 'vcpkg-triplets/*'
+      - 'testproject/*'
+      - 'checked_download.sh'
     
 env:
   VCPKG_VERSION_TAG: 2021.05.12

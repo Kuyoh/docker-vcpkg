@@ -153,7 +153,7 @@ See [VSCode's devcontainer.json reference](https://code.visualstudio.com/docs/re
 
 - [x] Create Ubuntu base image
 - [x] Add Alpine/musl flavor
-- [ ] Set up CI/CD
+- [x] Set up CI/CD
 - [ ] Add clang-based flavors
 - [ ] Add libc++ flavors
 
