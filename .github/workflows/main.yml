@@ -8,10 +8,10 @@ on:
   push:
     branches: [ main ]
     
-defaults: |
-  VCPKG_VERSION_TAG=2021.05.12
-  ALPINE_VERSION=3.14
-  UBUNTU_VERSION=20.04
+env:
+  VCPKG_VERSION_TAG: 2021.05.12
+  ALPINE_VERSION: 3.14
+  UBUNTU_VERSION: 20.04
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
