@@ -42,14 +42,14 @@ jobs:
           context: ./
           file: ./Dockerfile.alpine
           build-args: |
-            BASE_IMAGE=alpine:${{ defaults.ALPINE_VERSION }}
-            VCPKG_VERSION_TAG=${{ defaults.VCPKG_VERSION_TAG }}
+            BASE_IMAGE=alpine:${{ env.ALPINE_VERSION }}
+            VCPKG_VERSION_TAG=${{ env.VCPKG_VERSION_TAG }}
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ defaults.ALPINE_VERSION }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-alpine
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-alpine${{ defaults.ALPINE_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ env.ALPINE_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION_TAG }}-alpine
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION_TAG }}-alpine${{ env.ALPINE_VERSION }}
 
       - name: Build and push Alpine
         id: ubuntu_build
@@ -58,16 +58,16 @@ jobs:
           context: ./
           file: ./Dockerfile.debian
           build-args: |
-            BASE_IMAGE=ubuntu:${{ defaults.UBUNTU_VERSION }}
-            VCPKG_VERSION_TAG=${{ defaults.VCPKG_VERSION_TAG }}
+            BASE_IMAGE=ubuntu:${{ env.UBUNTU_VERSION }}
+            VCPKG_VERSION_TAG=${{ env.VCPKG_VERSION_TAG }}
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-ubuntu
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ defaults.UBUNTU_VERSION }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-ubuntu
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-ubuntu${{ defaults.UBUNTU_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ env.UBUNTU_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION_TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION_TAG }}-ubuntu
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION_TAG }}-ubuntu${{ env.UBUNTU_VERSION }}
 
       - name: Alpine Image digest
         run: echo ${{ steps.alpine_build.outputs.digest }}
