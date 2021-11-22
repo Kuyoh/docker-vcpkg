@@ -1,0 +1,75 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI to Dockerhub
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+    
+defaults: |
+  VCPKG_VERSION_TAG=2021.05.12
+  ALPINE_VERSION=3.14
+  UBUNTU_VERSION=20.04
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PAT }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push Alpine
+        id: alpine_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.alpine
+          build-args: |
+            BASE_IMAGE=alpine:${{ defaults.ALPINE_VERSION }}
+            VCPKG_VERSION_TAG=${{ defaults.VCPKG_VERSION_TAG }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ defaults.ALPINE_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-alpine
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-alpine${{ defaults.ALPINE_VERSION }}
+
+      - name: Build and push Alpine
+        id: ubuntu_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile.debian
+          build-args: |
+            BASE_IMAGE=ubuntu:${{ defaults.UBUNTU_VERSION }}
+            VCPKG_VERSION_TAG=${{ defaults.VCPKG_VERSION_TAG }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-ubuntu
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ defaults.UBUNTU_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-ubuntu
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ defaults.VCPKG_VERSION_TAG }}-ubuntu${{ defaults.UBUNTU_VERSION }}
+
+      - name: Alpine Image digest
+        run: echo ${{ steps.alpine_build.outputs.digest }}
+      - name: Ubuntu Image digest
+        run: echo ${{ steps.ubuntu_build.outputs.digest }}
