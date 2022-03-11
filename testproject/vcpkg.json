@@ -1,8 +1,8 @@
 {
-    "name": "test",
-    "version-string": "0.1.0",
-    "dependencies": [
-      "gtest",
-      "fmt"
-    ]
-  }
+  "name": "test",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "gtest",
+    "fmt"
+  ]
+}
