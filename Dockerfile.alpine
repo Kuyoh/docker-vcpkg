@@ -1,41 +1,25 @@
 
-ARG BASE_IMAGE=alpine:3.14
+ARG BASE_IMAGE=alpine:3.15
 
 # based on debian
 FROM ${BASE_IMAGE} AS vcpkg
 
 RUN apk add --no-cache cmake make ninja gcc g++ musl-dev zip pkgconf git curl tar
 
-COPY checked_download.sh /opt/
-
-# Find new versions here: https://github.com/ninja-build/ninja/releases
-ARG NINJA_VERSION_TAG=v1.10.2
-ARG NINJA_URI=https://github.com/ninja-build/ninja/archive/refs/tags/${NINJA_VERSION_TAG}.tar.gz
-ARG NINJA_SHA256=ce35865411f0490368a8fc383f29071de6690cbadc27704734978221f25e2bed
-
-# Find new versions here: https://github.com/microsoft/vcpkg/releases
-ARG VCPKG_VERSION_TAG=2021.05.12
-ARG VCPKG_URI=https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION_TAG}.tar.gz
-ARG VCPKG_SHA256=907f26a5357c30e255fda9427f1388a39804f607a11fa4c083cc740cb268f5dc
-
+# Set environment variables
 ENV VCPKG_ROOT=/opt/vcpkg
 ENV NINJA_ROOT=/opt/ninja
+
 ENV PATH=${NINJA_ROOT}:${VCPKG_ROOT}:${PATH}
 ENV VCPKG_FORCE_SYSTEM_BINARIES=1
 
+COPY .env install_vcpkg.sh /opt/
+
+# Download, build and install tools
 RUN cd /opt && \
-    chmod u+x /opt/checked_download.sh && \
-# Download and build ninja
-    ./checked_download.sh ${NINJA_SHA256} ${NINJA_URI} && mv ninja* ninja-source && \
-    cmake -H/opt/ninja-source -B/opt/ninja-source/build && \
-    cmake --build /opt/ninja-source/build && \
-    mkdir ${NINJA_ROOT} && mv /opt/ninja-source/build/ninja ${NINJA_ROOT} && \
-# Download and build vcpkg
-    ./checked_download.sh ${VCPKG_SHA256} ${VCPKG_URI} && mv vcpkg* vcpkg && \
-    /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics -useSystemBinaries && \
-# Clean up
-    rm -Rf /opt/ninja-source && \
-    rm checked_download.sh
+    chmod a+x install_vcpkg.sh && \
+    ./install_vcpkg.sh ${VCPKG_ROOT} ${NINJA_ROOT} && \
+    rm install_vcpkg.sh && rm .env
 
 COPY vcpkg-triplets/x64-linux-musl.cmake ${VCPKG_ROOT}/triplets/
 
@@ -50,6 +34,7 @@ COPY testproject ./
 RUN cmake -DCMAKE_TOOLCHAIN_FILE:STRING=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug \
     -H/workspace -B/workspace/build -G Ninja
+
 # build & run tests
 RUN cmake --build /workspace/build --config Debug --target all -j 6 -- && \
     cd /workspace/build && ctest
