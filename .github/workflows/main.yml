@@ -1,13 +1,16 @@
 name: Build
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - "Dockerfile.*"
       - "vcpkg-triplets/*"
       - "testproject/*"
+      - ".github/*"
+      - "Dockerfile.*"
       - "install_vcpkg.sh"
+      - "*.env"
 
 jobs:
   build:
