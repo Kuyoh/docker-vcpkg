@@ -19,7 +19,7 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push Alpine
+      - name: Build and test Alpine
         id: alpine_build
         uses: docker/build-push-action@v2
         with:
@@ -32,7 +32,7 @@ jobs:
             VCPKG_VERSION=${{ env.VCPKG_VERSION }}
           push: false
 
-      - name: Build and push Ubuntu
+      - name: Build and test Ubuntu
         id: ubuntu_build
         uses: docker/build-push-action@v2
         with:
