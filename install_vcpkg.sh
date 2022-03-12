@@ -6,7 +6,7 @@ VCPKG_ROOT=$1
 NINJA_ROOT=$2
 CMAKE_ROOT=$3
 
-. $(dirname $0)/.env
+. $(dirname $0)/version_vcpkg.env
 NINJA_URI=https://github.com/ninja-build/ninja/archive/refs/tags/v${NINJA_VERSION}.tar.gz
 VCPKG_URI=https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION}.tar.gz
 CMAKE_URI=https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh
