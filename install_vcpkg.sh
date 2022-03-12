@@ -52,6 +52,7 @@ checked_download () {
 }
 
 # Download and build cmake
+# For alpine linux, the cmake provided by the system (built for MUSL) is used instead, so the install steps here will be skipped.
 if [ "${CMAKE_ROOT}" != "" ]; then
     checked_download ${CMAKE_SHA256} ${CMAKE_URI}
     mv cmake*.sh cmake-install.sh

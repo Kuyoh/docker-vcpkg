@@ -74,23 +74,19 @@ Only [Docker](https://www.docker.com) is a prerequisite, although I recommend [V
 2. Build image of your choice:
      - Alpine Linux
        ```sh
-       docker build -f Dockerfile.alpine --build-args BASE_IMAGE=alpine:3.14 -t vcpkg:2021.05.12-alpine3.14 .
-       ```
-     - Debian Linux
-       ```sh
-       docker build -f Dockerfile.debian --build-args BASE_IMAGE=debian:11 -t vcpkg:2021.05.12-debian11 .
+       docker build -f Dockerfile.alpine --build-args BASE_IMAGE=alpine:3.15 -t vcpkg:latest-alpine3.15 .
        ```
      - Ubuntu Linux
        ```sh
-       docker build -f Dockerfile.debian --build-args BASE_IMAGE=ubuntu:20.04 -t vcpkg:2021.05.12-ubuntu20.04  -
+       docker build -f Dockerfile.debian --build-args BASE_IMAGE=ubuntu:22.04 -t vcpkg:latest-ubuntu22.04 .
        ```
       The specified base images were tested, but other (especially newer) versions of the respective base images should work, too.
 
 
 ### Updating vcpkg
 
-The version of vcpkg used when building the image can be updated by specifying the build arguments `VCPKG_VERSION_TAG` and `VCPKG_SHA256`.
-Note that the default URI for downloading vcpkg is https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION_TAG}.tar.gz (although that can be overridden with the build argument `VCPKG_URI`), and the SHA hash needs to be specified for the corresponding file, otherwise the build will fail.
+The version of vcpkg used when building the image can be updated by changing `VCPKG_VERSION` and `VCPKG_SHA256` in version_vcpkg.env.
+Note that the default URI for downloading vcpkg is https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION_TAG}.tar.gz, and the SHA hash needs to be specified for the corresponding file, otherwise the build will fail (in this case, it will display the actual hash, so if you have already verified the download, you can copy and paste that into version_vcpkg.env).
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -107,7 +103,7 @@ In all images, vcpkg is installed in `/opt/vcpkg`, and added to `PATH`. There is
 
 The following example is based on vcpkg [manifest mode](https://vcpkg.io/en/docs/users/manifests.html). See the testproject folder in this repository for an example of a setup using this mode.
 ```docker
-FROM kuyoh/vcpkg:2021.05.12 AS base
+FROM kuyoh/vcpkg:latest AS base
 
 WORKDIR /workspace
 
@@ -130,7 +126,7 @@ Create a devcontainer configuration in your project (typically `.devcontainer/de
 ```json
 {
 	"name": "VCPKG Docker",
-	"image": "kuyoh/vcpkg:2021.05.12",
+	"image": "kuyoh/vcpkg:latest",
 	"extensions": [ // these are optional, but i'd recommend them
 		"ms-vscode.cmake-tools",
 		"fredericbonnet.cmake-test-adapter",
