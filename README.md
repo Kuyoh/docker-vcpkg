@@ -1,5 +1,7 @@
 <div id="top"></div>
 
+[![Build](https://github.com/Kuyoh/docker-vcpkg/actions/workflows/main.yml/badge.svg)](https://github.com/Kuyoh/docker-vcpkg/actions/workflows/main.yml)
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
