@@ -3,13 +3,6 @@ name: Build PR
 on:
   pull_request:
     branches: [main]
-    paths:
-      - "vcpkg-triplets/*"
-      - "testproject/**"
-      - ".github/**"
-      - "Dockerfile.*"
-      - "install_vcpkg.sh"
-      - "*.env"
 
 jobs:
   build:
