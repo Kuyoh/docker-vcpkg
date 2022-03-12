@@ -1,7 +1,6 @@
 name: Build
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -11,6 +10,7 @@ on:
       - "Dockerfile.*"
       - "install_vcpkg.sh"
       - "*.env"
+  workflow_dispatch:
 
 jobs:
   build:
