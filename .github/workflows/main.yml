@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI to Dockerhub
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [main]
     paths:
@@ -13,25 +9,16 @@ on:
       - "testproject/*"
       - "install_vcpkg.sh"
 
-env:
-  ALPINE_VERSION: 3.15
-  UBUNTU_VERSION: 22.04
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Set up Enviornment variables
-        id: dotenv
-        uses: falti/dotenv-action@v0.2.7
+      - name: Set Environment Variables
+        uses: ./.github/actions/setenv
+        with:
+          varFilePath: ./*.env
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -49,33 +36,37 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile.alpine
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             BASE_IMAGE=alpine:${{ env.ALPINE_VERSION }}
-            VCPKG_VERSION=${{ steps.dotenv.outputs.VCPKG_VERSION }}
+            VCPKG_VERSION=${{ env.VCPKG_VERSION }}
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ env.ALPINE_VERSION }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ steps.dotenv.outputs.VCPKG_VERSION }}-alpine
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ steps.dotenv.outputs.VCPKG_VERSION }}-alpine${{ env.ALPINE_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION }}-alpine
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION }}-alpine${{ env.ALPINE_VERSION }}
 
-      - name: Build and push Alpine
+      - name: Build and push Ubuntu
         id: ubuntu_build
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile.debian
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             BASE_IMAGE=ubuntu:${{ env.UBUNTU_VERSION }}
-            VCPKG_VERSION=${{ steps.dotenv.outputs.VCPKG_VERSION }}
+            VCPKG_VERSION=${{ env.VCPKG_VERSION }}
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-ubuntu
             ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:latest-alpine${{ env.UBUNTU_VERSION }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ steps.dotenv.outputs.VCPKG_VERSION }}
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ steps.dotenv.outputs.VCPKG_VERSION }}-ubuntu
-            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ steps.dotenv.outputs.VCPKG_VERSION }}-ubuntu${{ env.UBUNTU_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION }}-ubuntu
+            ${{ secrets.DOCKER_HUB_USERNAME }}/vcpkg:${{ env.VCPKG_VERSION }}-ubuntu${{ env.UBUNTU_VERSION }}
 
       - name: Alpine Image digest
         run: echo ${{ steps.alpine_build.outputs.digest }}
