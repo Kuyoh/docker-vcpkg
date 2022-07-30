@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e 
-
 VCPKG_ROOT=$1
 NINJA_ROOT=$2
 CMAKE_ROOT=$3
