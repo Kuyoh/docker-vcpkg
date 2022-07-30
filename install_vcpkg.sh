@@ -52,7 +52,7 @@ checked_download () {
 # Download and build cmake
 # For alpine linux, the cmake provided by the system (built for MUSL) is used instead, so the install steps here will be skipped.
 if [ "${CMAKE_ROOT}" != "" ]; then
-    checked_download ${CMAKE_SHA256} ${CMAKE_URI}
+    checked_download ${CMAKE_DIGEST} ${CMAKE_URI}
     mv cmake*.sh cmake-install.sh
     chmod u+x cmake-install.sh
     mkdir ${CMAKE_ROOT}
@@ -60,7 +60,7 @@ if [ "${CMAKE_ROOT}" != "" ]; then
 fi
 
 # Download and build ninja
-checked_download ${NINJA_SHA256} ${NINJA_URI}
+checked_download ${NINJA_DIGEST} ${NINJA_URI}
 mv ninja* ninja-source
 cmake -Hninja-source -Bninja-source/build
 cmake --build ninja-source/build
@@ -68,7 +68,7 @@ mkdir ${NINJA_ROOT}
 mv ninja-source/build/ninja ${NINJA_ROOT}
 
 # Download and build vcpkg
-checked_download ${VCPKG_SHA256} ${VCPKG_URI}
+checked_download ${VCPKG_DIGEST} ${VCPKG_URI}
 mv vcpkg* ${VCPKG_ROOT}
 ${VCPKG_ROOT}/bootstrap-vcpkg.sh -disableMetrics
 

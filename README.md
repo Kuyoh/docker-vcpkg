@@ -87,7 +87,7 @@ Only [Docker](https://www.docker.com) is a prerequisite, although I recommend [V
 
 ### Updating vcpkg
 
-The version of vcpkg used when building the image can be updated by changing `VCPKG_VERSION` and `VCPKG_SHA256` in version_vcpkg.env.
+The version of vcpkg used when building the image can be updated by changing `VCPKG_VERSION` and `VCPKG_DIGEST` in version_vcpkg.env.
 Note that the default URI for downloading vcpkg is https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION_TAG}.tar.gz, and the SHA hash needs to be specified for the corresponding file, otherwise the build will fail (in this case, it will display the actual hash, so if you have already verified the download, you can copy and paste that into version_vcpkg.env).
 
 
