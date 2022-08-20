@@ -9,31 +9,18 @@ NINJA_URI=https://github.com/ninja-build/ninja/archive/refs/tags/${NINJA_VERSION
 VCPKG_URI=https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION}.tar.gz
 CMAKE_URI=https://github.com/Kitware/CMake/releases/download/${CMAKE_VERSION}/cmake-${CMAKE_VERSION##v}-Linux-x86_64.sh
 
-checked_download () { 
-    sha256=$1
-    uri=$2
+download () { 
+    uri=$1
     tmp_file=$(basename $uri)
 
-    if [ -z "$sha256" ]; then
-        echo "install_vcpkg.sh: checked_download(): error: no checksum provided for $uri"
-        exit 1
-    fi
-
     if [ -z "$uri" ]; then
-        echo "install_vcpkg.sh: checked_download(): error: no uri provided"
+        echo "install_vcpkg.sh: download(): error: no uri provided"
         exit 1
     fi
 
     curl -SL $uri --output $tmp_file
     if [ $? -ne 0 ]; then
-        echo "install_vcpkg.sh: checked_download(): error: download failed ($uri)"
-        exit 1
-    fi
-
-    echo "$sha256  $tmp_file" | sha256sum -c
-    if [ $? -ne 0 ]; then
-        echo "install_vcpkg.sh: checked_download(): error: checksum mismatch ($uri)"
-        echo "install_vcpkg.sh: checked_download(): found `sha256sum $tmp_file | cut -d' ' -f1`, expected $sha256"
+        echo "install_vcpkg.sh: download(): error: download failed ($uri)"
         exit 1
     fi
 
@@ -41,7 +28,7 @@ checked_download () {
     if [ "$uri_extension" = "gz" ]; then
         tar -xf $tmp_file
         if [ $? -ne 0 ]; then 
-            echo "install_vcpkg.sh: checked_download(): error: failed to unpack ($uri)"
+            echo "install_vcpkg.sh: download(): error: failed to unpack ($uri)"
             exit 1
         fi
 
@@ -52,7 +39,7 @@ checked_download () {
 # Download and build cmake
 # For alpine linux, the cmake provided by the system (built for MUSL) is used instead, so the install steps here will be skipped.
 if [ "${CMAKE_ROOT}" != "" ]; then
-    checked_download ${CMAKE_DIGEST} ${CMAKE_URI}
+    download ${CMAKE_URI}
     mv cmake*.sh cmake-install.sh
     chmod u+x cmake-install.sh
     mkdir ${CMAKE_ROOT}
@@ -60,7 +47,7 @@ if [ "${CMAKE_ROOT}" != "" ]; then
 fi
 
 # Download and build ninja
-checked_download ${NINJA_DIGEST} ${NINJA_URI}
+download ${NINJA_URI}
 mv ninja* ninja-source
 cmake -Hninja-source -Bninja-source/build
 cmake --build ninja-source/build
@@ -68,7 +55,7 @@ mkdir ${NINJA_ROOT}
 mv ninja-source/build/ninja ${NINJA_ROOT}
 
 # Download and build vcpkg
-checked_download ${VCPKG_DIGEST} ${VCPKG_URI}
+download ${VCPKG_URI}
 mv vcpkg* ${VCPKG_ROOT}
 ${VCPKG_ROOT}/bootstrap-vcpkg.sh -disableMetrics
 
