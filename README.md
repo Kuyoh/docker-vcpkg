@@ -29,6 +29,7 @@
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#decision-records">Decision Records</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -177,6 +178,18 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+
+<!-- DECISION RECORDS -->
+## Decision Records
+
+**August 2022: Dropping sha check**<br/>
+While renovate bot can update digests (including sha of release assets), it cannot update digests for source code downloads that are required for ninja & vcpkg.
+Curl (used to download the archives, see install_vcpkg.sh) verifies server certificates via root CA check, which is arguably better than comparing sha to an automatically updated one, anyway.
+Therefore I decided to drop the check in order to improve maintainability of the project.
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- LICENSE -->
