@@ -8,6 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Add Pull Request Reviewers
+        uses: AveryCameronUofR/add-reviewer-gh-action@1.0.4
+        with:
+          reviewers: "Kuyoh"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/checkout@v3
 
       - name: Set Environment Variables
