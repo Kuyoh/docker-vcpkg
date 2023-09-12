@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and test Alpine
         id: alpine_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile.alpine
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build and test Ubuntu
         id: ubuntu_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./Dockerfile.debian
