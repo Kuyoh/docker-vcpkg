@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add Pull Request Reviewers
+        if: ${{ github.event.pull_request.user.login != 'Kuyoh' }}
         uses: AveryCameronUofR/add-reviewer-gh-action@1.0.4
         with:
           reviewers: "Kuyoh"
