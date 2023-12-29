@@ -35,7 +35,7 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile.alpine
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64 # testing alpine x64 only to save on build time
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |

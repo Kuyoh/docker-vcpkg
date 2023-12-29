@@ -34,6 +34,7 @@
   </ol>
 </details>
 
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -51,11 +52,9 @@ It is mainly targeted at development using Visual Studio Code, but it should wor
 * [CMake](https://cmake.org) - installed as part of the docker build
 * [Ninja](https://ninja-build.org) - installed as part of the docker build
 * [GCC](https://gcc.gnu.org) - installed as part of the docker build
-* [Visual Studio Code](https://code.visualstudio.com) - IDE for testing the dockerfiles  
-  Note: the [C/C++ extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) for VSCode currently does not support alpine-linux/musl (see [Issue #4827](https://github.com/microsoft/vscode-cpptools/issues/4827)).
+* [Visual Studio Code](https://code.visualstudio.com) - IDE for testing the dockerfiles
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->

@@ -21,8 +21,6 @@ RUN cd /opt && \
     ./install_vcpkg.sh ${VCPKG_ROOT} ${NINJA_ROOT} && \
     rm install_vcpkg.sh && rm version_vcpkg.env
 
-COPY vcpkg-triplets/x64-linux-musl.cmake ${VCPKG_ROOT}/triplets/
-
 FROM vcpkg as testing
 
 WORKDIR /workspace
