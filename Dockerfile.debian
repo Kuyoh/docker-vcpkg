@@ -1,5 +1,5 @@
 
-ARG BASE_IMAGE=ubuntu:22.04
+ARG BASE_IMAGE=ubuntu:24.04
 
 # based on debian
 FROM ${BASE_IMAGE} AS vcpkg
@@ -7,8 +7,8 @@ FROM ${BASE_IMAGE} AS vcpkg
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends tzdata && \
-    apt-get install -y --no-install-recommends zip unzip curl tar build-essential pkg-config git ca-certificates \
-    yasm nasm autoconf automake autotools-dev libtool && \
+    apt-get install -y --no-install-recommends zip unzip curl tar git ca-certificates linux-libc-dev && \
+    apt-get install -y --no-install-recommends build-essential pkg-config yasm nasm autoconf automake autoconf-archive autotools-dev libtool && \
     rm -Rf /var/lib/apt/lists/*
 
 # Set environment variables
@@ -35,12 +35,14 @@ WORKDIR /workspace
 COPY testproject ./
 
 # generate tests
-RUN cmake -DCMAKE_TOOLCHAIN_FILE:STRING=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
+RUN --mount=type=cache,target=/opt/vcpkg/buildtrees --mount=type=cache,target=/opt/vcpkg/downloads --mount=type=cache,target=/root/.cache/vcpkg/archives \
+    cmake -DCMAKE_TOOLCHAIN_FILE:STRING=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug \
     -H/workspace -B/workspace/build -G Ninja
 
 # build & run tests
-RUN cmake --build /workspace/build --config Debug --target all -j 6 -- && \
+RUN --mount=type=cache,target=/opt/vcpkg/buildtrees --mount=type=cache,target=/opt/vcpkg/downloads --mount=type=cache,target=/root/.cache/vcpkg/archives \
+    cmake --build /workspace/build --config Debug --target all -j 6 -- && \
     cd /workspace/build && ctest
 
 FROM vcpkg as final

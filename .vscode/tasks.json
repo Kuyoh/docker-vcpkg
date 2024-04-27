@@ -7,6 +7,17 @@
             "label": "build",
             "type": "cmake",
             "command": "build"
+        },
+        {
+            "label": "Test Alpine Image",
+            "type": "shell",
+            "command": "docker build -f Dockerfile.alpine -t alpine-vcpkg --target testing --progress=plain .",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test Ubuntu Image",
+            "type": "shell",
+            "command": "docker build -f Dockerfile.debian -t ubuntu-vcpkg --target testing --progress=plain ."
         }
     ]
 }

@@ -4,13 +4,14 @@ ARG BASE_IMAGE=alpine:3.19
 # based on debian
 FROM ${BASE_IMAGE} AS vcpkg
 
-RUN apk add --no-cache cmake make ninja gcc g++ musl-dev zip pkgconf git curl tar
+RUN apk add --no-cache cmake make bash gcc g++ musl-dev zip pkgconf git curl tar linux-headers autoconf automake autoconf-archive 
 
 # Set environment variables
 ENV VCPKG_ROOT=/opt/vcpkg
 ENV NINJA_ROOT=/opt/ninja
 
 ENV PATH=${NINJA_ROOT}:${VCPKG_ROOT}:${PATH}
+ENV CMAKE_MAKE_PROGRAM=${NINJA_ROOT}/ninja
 ENV VCPKG_FORCE_SYSTEM_BINARIES=1
 
 COPY version_vcpkg.env install_vcpkg.sh /opt/
@@ -29,12 +30,14 @@ WORKDIR /workspace
 COPY testproject ./
 
 # generate tests
-RUN cmake -DCMAKE_TOOLCHAIN_FILE:STRING=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
+RUN --mount=type=cache,target=/opt/vcpkg/buildtrees --mount=type=cache,target=/opt/vcpkg/downloads --mount=type=cache,target=/root/.cache/vcpkg/archives \
+    cmake -DCMAKE_TOOLCHAIN_FILE:STRING=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug \
     -H/workspace -B/workspace/build -G Ninja
 
 # build & run tests
-RUN cmake --build /workspace/build --config Debug --target all -j 6 -- && \
+RUN --mount=type=cache,target=/opt/vcpkg/buildtrees --mount=type=cache,target=/opt/vcpkg/downloads --mount=type=cache,target=/root/.cache/vcpkg/archives \
+    cmake --build /workspace/build --config Debug --target all -j 6 -- && \
     cd /workspace/build && ctest
 
 FROM vcpkg as final
