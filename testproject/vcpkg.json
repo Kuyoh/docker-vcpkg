@@ -5,5 +5,12 @@
     "gtest",
     "fmt",
     "python3"
+  ],
+  "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc",
+  "overrides": [
+    {
+      "name": "fmt",
+      "version": "10.2.1"
+    }
   ]
 }
