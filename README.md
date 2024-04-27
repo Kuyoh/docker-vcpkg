@@ -80,7 +80,7 @@ Only [Docker](https://www.docker.com) is a prerequisite, although I recommend [V
        ```
      - Ubuntu Linux
        ```sh
-       docker build -f Dockerfile.debian --build-args BASE_IMAGE=ubuntu:22.04 -t vcpkg:latest-ubuntu22.04 .
+       docker build -f Dockerfile.debian --build-args BASE_IMAGE=ubuntu:24.04 -t vcpkg:latest-ubuntu24.04 .
        ```
       The specified base images were tested, but other (especially newer) versions of the respective base images should work, too.
 
