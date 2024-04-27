@@ -20,7 +20,7 @@ fi
 
 # Define download links
 NINJA_URI=https://github.com/ninja-build/ninja/archive/refs/tags/${NINJA_VERSION}.tar.gz
-VCPKG_URI=https://github.com/microsoft/vcpkg/archive/refs/tags/${VCPKG_VERSION}.tar.gz
+VCPKG_URI=https://github.com/microsoft/vcpkg.git
 CMAKE_URI=https://github.com/Kitware/CMake/releases/download/${CMAKE_VERSION}/cmake-${CMAKE_VERSION##v}-${CMAKE_ARCH}.sh
 
 download () { 
@@ -69,8 +69,11 @@ mkdir ${NINJA_ROOT}
 mv ninja-source/build/ninja ${NINJA_ROOT}
 
 # Download and build vcpkg
-download ${VCPKG_URI}
-mv vcpkg* ${VCPKG_ROOT}
+PREVIOUS_DIRECTORY=${PWD}
+mkdir -p ${VCPKG_ROOT}
+cd ${VCPKG_ROOT}
+git clone ${VCPKG_URI} . --branch=${VCPKG_VERSION} --filter=tree:0
+cd ${PREVIOUS_DIRECTORY}
 ${VCPKG_ROOT}/bootstrap-vcpkg.sh -disableMetrics
 
 # Clean up
