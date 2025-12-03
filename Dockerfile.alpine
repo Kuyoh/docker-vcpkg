@@ -1,5 +1,5 @@
 
-ARG BASE_IMAGE=alpine:3.22
+ARG BASE_IMAGE=alpine:3.23
 
 # based on debian
 FROM ${BASE_IMAGE} AS vcpkg
